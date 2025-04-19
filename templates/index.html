@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIN - Budgeting & Expense Estimation Planner</title>
+    <style>
+        :root {
+            --primary-bg: #1a1a2e;
+            --secondary-bg: #16213e;
+            --accent-color: #e94560;
+            --text-color: #ffffff;
+            --secondary-text: #c3c3c3;
+            --border-color: #e94560;
+            --hover-color: #ff6b6b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .team-info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: var(--text-color);
+            background-color: var(--secondary-bg);
+            padding: 15px 20px;
+            border-radius: 10px;
+            border-left: 3px solid var(--accent-color);
+            font-size: 1rem;
+            line-height: 1.5;
+            z-index: 10;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .team-info:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 12px rgba(233, 69, 96, 0.2);
+            border-left-width: 5px;
+        }
+
+        .team-info p {
+            margin: 0;
+            opacity: 1;
+            font-weight: 500;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--secondary-bg);
+            border-bottom: 3px solid var(--accent-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--hover-color), transparent);
+            animation: headerGlow 8s linear infinite;
+        }
+
+        @keyframes headerGlow {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .logo {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            padding: 15px;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .geometric-logo {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .hexagon {
+            position: absolute;
+            width: 60px;
+            height: 34.64px;
+            background: var(--accent-color);
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            transition: all 0.3s ease;
+        }
+
+        .hex1 {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse1 3s ease-in-out infinite;
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--hover-color) 100%);
+        }
+
+        .hex2 {
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse2 3s ease-in-out infinite;
+            animation-delay: 0.5s;
+            background: linear-gradient(45deg, var(--accent-color) 0%, var(--hover-color) 100%);
+        }
+
+        .hex3 {
+            top: 75%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse3 3s ease-in-out infinite;
+            animation-delay: 1s;
+            background: linear-gradient(225deg, var(--accent-color) 0%, var(--hover-color) 100%);
+        }
+
+        .hex4 {
+            top: 50%;
+            left: 25%;
+            transform: translate(-50%, -50%);
+            animation: pulse2 3s ease-in-out infinite;
+            animation-delay: 1.5s;
+            background: linear-gradient(315deg, var(--accent-color) 0%, var(--hover-color) 100%);
+        }
+
+        .hex5 {
+            top: 50%;
+            left: 75%;
+            transform: translate(-50%, -50%);
+            animation: pulse3 3s ease-in-out infinite;
+            animation-delay: 2s;
+            background: linear-gradient(90deg, var(--accent-color) 0%, var(--hover-color) 100%);
+        }
+
+        .connecting-line {
+            position: absolute;
+            background: var(--accent-color);
+            height: 2px;
+            width: 30px;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .line1 {
+            top: 37.5%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: glow1 3s ease-in-out infinite;
+        }
+
+        .line2 {
+            top: 62.5%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: glow2 3s ease-in-out infinite;
+        }
+
+        .line3 {
+            top: 50%;
+            left: 37.5%;
+            transform: translate(-50%, -50%) rotate(90deg);
+            animation: glow3 3s ease-in-out infinite;
+        }
+
+        .line4 {
+            top: 50%;
+            left: 62.5%;
+            transform: translate(-50%, -50%) rotate(90deg);
+            animation: glow1 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse1 {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        @keyframes pulse2 {
+            0%, 100% { transform: translate(-50%, -50%) scale(0.8); }
+            50% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        @keyframes pulse3 {
+            0%, 100% { transform: translate(-50%, -50%) scale(0.9); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        @keyframes glow1 {
+            0%, 100% { opacity: 0.6; box-shadow: 0 0 5px var(--accent-color); }
+            50% { opacity: 1; box-shadow: 0 0 15px var(--hover-color); }
+        }
+
+        @keyframes glow2 {
+            0%, 100% { opacity: 1; box-shadow: 0 0 15px var(--hover-color); }
+            50% { opacity: 0.6; box-shadow: 0 0 5px var(--accent-color); }
+        }
+
+        @keyframes glow3 {
+            0%, 100% { opacity: 0.8; box-shadow: 0 0 10px var(--accent-color); }
+            50% { opacity: 0.4; box-shadow: 0 0 5px var(--hover-color); }
+        }
+
+        .logo:hover .hexagon {
+            filter: brightness(1.2);
+            box-shadow: 0 0 20px var(--hover-color);
+        }
+
+        .logo:hover .connecting-line {
+            opacity: 1;
+            box-shadow: 0 0 10px var(--hover-color);
+            background: var(--hover-color);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 1.5rem 0 0.5rem 0;
+            letter-spacing: 0.5rem;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--text-color) 0%, var(--accent-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 0 0 10px rgba(233, 69, 96, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(233, 69, 96, 0.8); }
+        }
+
+        .slogan {
+            font-size: 1.1rem;
+            letter-spacing: 0.2rem;
+            text-transform: uppercase;
+            color: var(--secondary-text);
+            margin-top: 0.5rem;
+        }
+
+        .bot-name {
+            font-size: 1rem;
+            color: var(--accent-color);
+            margin-top: 1rem;
+            letter-spacing: 0.1rem;
+            font-weight: 500;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            padding: 2rem;
+            gap: 2rem;
+            overflow: hidden;
+        }
+
+        .features-container {
+            width: 320px;
+            background: var(--secondary-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 2px solid var(--border-color);
+            position: sticky;
+            top: 1rem;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-item {
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(233, 69, 96, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(233, 69, 96, 0.1) 100%);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-item:hover::before {
+            transform: translateX(0);
+        }
+
+        .feature-item:hover {
+            background: rgba(233, 69, 96, 0.2);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.2);
+        }
+
+        .feature-item h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .feature-item p {
+            font-size: 0.9rem;
+            color: var(--secondary-text);
+        }
+
+        .chat-container {
+            flex: 1;
+            background: var(--secondary-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-height: calc(100vh - 200px);
+            border: 2px solid var(--border-color);
+        }
+
+        #chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .message {
+            margin: 1rem 0;
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            max-width: 80%;
+            width: fit-content;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--hover-color) 100%);
+            color: var(--text-color);
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot-message {
+            background: var(--secondary-bg);
+            color: var(--text-color);
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+            border: 1px solid var(--border-color);
+        }
+
+        .input-container {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            align-items: flex-end;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            font-size: 0.95rem;
+            min-height: 45px;
+            max-height: 150px;
+            resize: none;
+        }
+
+        #user-input:focus {
+            outline: none;
+            border-color: var(--hover-color);
+            box-shadow: 0 0 10px rgba(233, 69, 96, 0.3);
+        }
+
+        #send-button {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--hover-color) 100%);
+            border: none;
+            border-radius: 12px;
+            color: var(--text-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        #send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .features-container {
+                width: 100%;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .slogan {
+                font-size: 0.9rem;
+            }
+
+            .logo {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="team-info">
+        <p>Made by - Ankit Kumar 12312618</p>
+    </div>
+
+    <div class="header">
+        <div class="logo">
+            <div class="geometric-logo">
+                <div class="connecting-line line1"></div>
+                <div class="connecting-line line2"></div>
+                <div class="connecting-line line3"></div>
+                <div class="connecting-line line4"></div>
+                <div class="hexagon hex1"></div>
+                <div class="hexagon hex2"></div>
+                <div class="hexagon hex3"></div>
+                <div class="hexagon hex4"></div>
+                <div class="hexagon hex5"></div>
+            </div>
+        </div>
+        <h1>FIN</h1>
+        <div class="bot-name">Budgeting & Expense Estimation Planner</div>
+        <div class="slogan">Your Financial Future Starts Here</div>
+    </div>
+
+    <div class="main-container">
+        <div class="features-container">
+            <div class="feature-item">
+                <h3>💰 Budget Overview</h3>
+                <p>Track your monthly income and expenses</p>
+            </div>
+            <div class="feature-item">
+                <h3>✈️ Trip Planning</h3>
+                <p>Plan and budget your upcoming trips</p>
+            </div>
+            <div class="feature-item">
+                <h3>📊 Financial Analysis</h3>
+                <p>Get insights into your spending patterns</p>
+            </div>
+            <div class="feature-item">
+                <h3>🎯 Savings Goals</h3>
+                <p>Set and track your savings targets</p>
+            </div>
+            <div class="feature-item">
+                <h3>💡 Smart Tips</h3>
+                <p>Receive personalized financial advice</p>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div id="chat-box"></div>
+            <div class="input-container">
+                <textarea id="user-input" placeholder="Type your message here..." rows="1" autocomplete="off"></textarea>
+                <button id="send-button">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatBox = document.getElementById('chat-box');
+            const userInput = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-button');
+            const featureItems = document.querySelectorAll('.feature-item');
+
+            // Financial quotes collection
+            const quotes = [
+                {
+                    text: "The best investment you can make is in yourself.",
+                    author: "Warren Buffett"
+                },
+                {
+                    text: "Don't tell me what you value, show me your budget, and I'll tell you what you value.",
+                    author: "Joe Biden"
+                },
+                {
+                    text: "A budget is telling your money where to go instead of wondering where it went.",
+                    author: "Dave Ramsey"
+                },
+                {
+                    text: "Financial peace isn't the acquisition of stuff. It's learning to live on less than you make.",
+                    author: "Will Rogers"
+                },
+                {
+                    text: "The habit of saving is itself an education; it fosters every virtue, teaches self-denial, cultivates the sense of order.",
+                    author: "T.T. Munger"
+                },
+                {
+                    text: "Time is money. Budget both wisely.",
+                    author: "FIN"
+                },
+                {
+                    text: "Your future self is watching you right now through memories.",
+                    author: "FIN"
+                },
+                {
+                    text: "Small savings today lead to big dreams tomorrow.",
+                    author: "FIN"
+                }
+            ];
+
+            // Get random quote
+            function getRandomQuote() {
+                return quotes[Math.floor(Math.random() * quotes.length)];
+            }
+
+            // Auto-resize textarea
+            function autoResize() {
+                this.style.height = '45px';
+                const newHeight = Math.min(this.scrollHeight, 150);
+                this.style.height = newHeight + 'px';
+                this.style.overflowY = this.scrollHeight > 150 ? 'auto' : 'hidden';
+            }
+
+            userInput.addEventListener('input', autoResize);
+            userInput.addEventListener('focus', autoResize);
+            userInput.addEventListener('change', autoResize);
+
+            function addMessage(message, isUser, isQuote = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+                
+                if (isQuote) {
+                    // Style for quote messages
+                    messageDiv.style.background = 'rgba(198, 163, 85, 0.15)';
+                    messageDiv.style.borderLeft = '4px solid var(--gold)';
+                    messageDiv.style.borderRadius = '4px';
+                    messageDiv.style.maxWidth = '90%';
+                    messageDiv.style.margin = '1.5rem auto';
+                    messageDiv.style.textAlign = 'center';
+                    messageDiv.style.padding = '1.5rem';
+                    messageDiv.style.fontSize = '1.1rem';
+                    messageDiv.style.fontStyle = 'italic';
+                }
+
+                // Convert URLs to clickable links
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                const messageWithLinks = message.replace(urlRegex, '<a href="$1" target="_blank" style="color: inherit; text-decoration: underline;">$1</a>');
+                
+                // Handle line breaks and preserve formatting
+                const formattedMessage = messageWithLinks.replace(/\n/g, '<br>');
+                messageDiv.innerHTML = formattedMessage;
+                
+                chatBox.appendChild(messageDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+
+            function sendMessage() {
+                const message = userInput.value.trim();
+                if (message) {
+                    addMessage(message, true);
+                    userInput.value = '';
+                    userInput.style.height = '45px';
+                    userInput.style.overflowY = 'hidden';
+
+                    fetch('/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ input: message })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        addMessage(data.response, false);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        addMessage('Sorry, there was an error processing your request.', false);
+                    });
+                }
+            }
+
+            // Add click handlers for feature items
+            featureItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const topic = item.querySelector('h3').textContent;
+                    userInput.value = `Tell me about ${topic}`;
+                    userInput.dispatchEvent(new Event('input'));
+                    sendMessage();
+                });
+            });
+
+            sendButton.addEventListener('click', sendMessage);
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Add welcome message with only the quote
+            const quote = getRandomQuote();
+            addMessage(`"${quote.text}"\n\n— ${quote.author}`, false, true);
+        });
+    </script>
+</body>
+</html> 
