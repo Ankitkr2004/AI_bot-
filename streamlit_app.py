@@ -79,8 +79,8 @@ with st.sidebar:
     """)
     st.markdown("---")
     st.markdown("Made by - Ankit Kumar 12312618")
-    st.markdown("Made by - DipeshKumar Joshi 12303249")
-    st.markdown("Made by - Daksh Gupta 12313179")
+    st.markdown("          DipeshKumar Joshi 12303249")
+    st.markdown("          Daksh Gupta 12313179")
 
 # Display chat messages
 for message in st.session_state.messages:
